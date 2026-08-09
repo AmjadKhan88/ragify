@@ -15,10 +15,17 @@ export class RagifyPipeline {
       }));
 
       await this.config.vectorStore.upsert(embeddedChunks);
+
+      if (this.config.retriever) {
+        await this.config.retriever.index(embeddedChunks);
+      }
     }
   }
 
   async query(text: string, topK = 5): Promise<VectorSearchResult[]> {
+    if (this.config.retriever) {
+      return this.config.retriever.retrieve(text, topK);
+    }
     const [embedding] = await this.config.embedder.embed([text]);
     return this.config.vectorStore.query(embedding, topK);
   }

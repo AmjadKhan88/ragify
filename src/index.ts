@@ -7,5 +7,7 @@ export { GeminiEmbedder } from './embedders/gemini.js';
 export { OpenAIEmbedder } from './embedders/openai.js';
 export { GroqLLM } from './llm/groq.js';
 export { GeminiLLM } from './llm/gemini.js';
+export { BM25Retriever } from './retrievers/bm25.js';
+export { HybridRetriever } from './retrievers/hybrid.js';
 export { withRetry } from './utils/retry.js';
 export { toBatches } from './utils/batch.js';
