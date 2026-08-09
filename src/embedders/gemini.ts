@@ -1,7 +1,8 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import type { GoogleGenerativeAI } from '@google/generative-ai';
 import type { Embedder } from '../types/index.js';
 import { withRetry } from '../utils/retry.js';
 import { toBatches } from '../utils/batch.js';
+import { lazyImport } from '../utils/lazy-import.js';
 
 export interface GeminiEmbedderOptions {
   apiKey?: string;
@@ -10,11 +11,12 @@ export interface GeminiEmbedderOptions {
   dimensions?: number;
 }
 
-const DEFAULT_MODEL = 'text-embedding-004';
+const DEFAULT_MODEL = 'gemini-embedding-2-preview';
 const DEFAULT_DIMENSIONS = 768;
 
 export class GeminiEmbedder implements Embedder {
-  private client: GoogleGenerativeAI;
+  private client: GoogleGenerativeAI | null = null;
+  private apiKey: string;
   private model: string;
   private batchSize: number;
   readonly dimensions: number;
@@ -26,15 +28,23 @@ export class GeminiEmbedder implements Embedder {
         'Gemini API key missing. Pass it via options.apiKey or set GEMINI_API_KEY in your environment.'
       );
     }
-
-    this.client = new GoogleGenerativeAI(apiKey);
+    this.apiKey = apiKey;
     this.model = options.model ?? process.env.GEMINI_EMBEDDING_MODEL ?? DEFAULT_MODEL;
     this.batchSize = options.batchSize ?? 100;
     this.dimensions = options.dimensions ?? DEFAULT_DIMENSIONS;
   }
 
+  private async getClient(): Promise<GoogleGenerativeAI> {
+    if (!this.client) {
+      const mod = await lazyImport<typeof import('@google/generative-ai')>('@google/generative-ai');
+      this.client = new mod.GoogleGenerativeAI(this.apiKey);
+    }
+    return this.client;
+  }
+
   async embed(texts: string[]): Promise<number[][]> {
-    const model = this.client.getGenerativeModel({ model: this.model });
+    const client = await this.getClient();
+    const model = client.getGenerativeModel({ model: this.model });
     const batches = toBatches(texts, this.batchSize);
     const allEmbeddings: number[][] = [];
 

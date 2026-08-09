@@ -14,6 +14,14 @@ retrieval, and vector storage.
 npm install @amjadkhan88/ragify
 \`\`\`
 
+Then install only the provider SDK(s) you actually plan to use:
+
+\`\`\`bash
+npm install @google/generative-ai   # for GeminiEmbedder / GeminiLLM
+npm install groq-sdk                # for GroqLLM
+npm install openai                  # for OpenAIEmbedder
+\`\`\`
+
 ## Quick Start
 
 _Coming soon._
