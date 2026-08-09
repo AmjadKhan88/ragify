@@ -69,6 +69,7 @@
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
     "dotenv": "^17.4.2",
+    "groq-sdk": "^1.5.0",
     "openai": "^7.4.0"
   }
 }

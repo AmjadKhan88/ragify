@@ -22,4 +22,16 @@ export class RagifyPipeline {
     const [embedding] = await this.config.embedder.embed([text]);
     return this.config.vectorStore.query(embedding, topK);
   }
+
+  async generate(question: string, topK = 5): Promise<string> {
+    if (!this.config.llm) {
+      throw new Error(
+        'No LLM configured. Pass an llm (e.g. GroqLLM, GeminiLLM) in RagifyConfig to use generate().'
+      );
+    }
+
+    const results = await this.query(question, topK);
+    const context = results.map((r) => r.chunk.content);
+    return this.config.llm.generate(question, context);
+  }
 }
