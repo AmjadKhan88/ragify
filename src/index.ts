@@ -2,6 +2,7 @@ export * from './types/index.js';
 export { RagifyPipeline } from './core/pipeline.js';
 export { InMemoryVectorStore } from './vectorstores/memory.js';
 export { FixedSizeChunker } from './chunkers/fixed-size.js';
+export { RecursiveChunker } from './chunkers/recursive.js';
 export { MockEmbedder } from './embedders/mock.js';
 export { GeminiEmbedder } from './embedders/gemini.js';
 export { OpenAIEmbedder } from './embedders/openai.js';
