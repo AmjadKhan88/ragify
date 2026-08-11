@@ -53,7 +53,7 @@
   },
   "homepage": "https://github.com/AmjadKhan88/ragify#readme",
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
