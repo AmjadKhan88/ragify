@@ -1,4 +1,5 @@
-import type { RagifyConfig, RagifyDocument, VectorSearchResult } from '../types/index.js';
+import type { RagifyConfig, RagifyDocument, VectorSearchResult, Chunk } from '../types/index.js';
+import { hashContent } from '../utils/hash.js';
 
 export class RagifyPipeline {
   constructor(private config: RagifyConfig) {}
@@ -6,13 +7,7 @@ export class RagifyPipeline {
   async addDocuments(documents: RagifyDocument[]): Promise<void> {
     for (const doc of documents) {
       const chunks = await this.config.chunker.chunk(doc);
-      const texts = chunks.map((c) => c.content);
-      const embeddings = await this.config.embedder.embed(texts);
-
-      const embeddedChunks = chunks.map((chunk, i) => ({
-        ...chunk,
-        embedding: embeddings[i],
-      }));
+      const embeddedChunks = await this.embedChunks(chunks);
 
       await this.config.vectorStore.upsert(embeddedChunks);
 
@@ -20,6 +15,45 @@ export class RagifyPipeline {
         await this.config.retriever.index(embeddedChunks);
       }
     }
+  }
+
+  private async embedChunks(chunks: Chunk[]): Promise<Chunk[]> {
+    const { embedder, cache } = this.config;
+
+    if (!cache) {
+      const embeddings = await embedder.embed(chunks.map((c) => c.content));
+      return chunks.map((chunk, i) => ({ ...chunk, embedding: embeddings[i] }));
+    }
+
+    const cacheKeys = chunks.map((c) => hashContent(c.content, embedder.constructor.name));
+    const cached = await Promise.all(cacheKeys.map((key) => cache.get(key)));
+
+    const uncachedIndices: number[] = [];
+    const uncachedTexts: string[] = [];
+
+    cached.forEach((embedding, i) => {
+      if (embedding === undefined) {
+        uncachedIndices.push(i);
+        uncachedTexts.push(chunks[i].content);
+      }
+    });
+
+    let newEmbeddings: number[][] = [];
+    if (uncachedTexts.length > 0) {
+      newEmbeddings = await embedder.embed(uncachedTexts);
+      await Promise.all(
+        uncachedIndices.map((chunkIndex, j) =>
+          cache.set(cacheKeys[chunkIndex], newEmbeddings[j])
+        )
+      );
+    }
+
+    const finalEmbeddings: number[][] = [...cached] as number[][];
+    uncachedIndices.forEach((chunkIndex, j) => {
+      finalEmbeddings[chunkIndex] = newEmbeddings[j];
+    });
+
+    return chunks.map((chunk, i) => ({ ...chunk, embedding: finalEmbeddings[i] }));
   }
 
   async query(text: string, topK = 5): Promise<VectorSearchResult[]> {

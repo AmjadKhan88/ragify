@@ -5,3 +5,4 @@ export * from './vectorstore.js';
 export * from './retriever.js';
 export * from './llm.js';
 export * from './config.js';
+export * from './cache.js';

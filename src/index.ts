@@ -10,5 +10,8 @@ export { GroqLLM } from './llm/groq.js';
 export { GeminiLLM } from './llm/gemini.js';
 export { BM25Retriever } from './retrievers/bm25.js';
 export { HybridRetriever } from './retrievers/hybrid.js';
+export { InMemoryCache } from './cache/memory-cache.js';
+export { FileCache } from './cache/file-cache.js';
 export { withRetry } from './utils/retry.js';
 export { toBatches } from './utils/batch.js';
+export { hashContent } from './utils/hash.js';
