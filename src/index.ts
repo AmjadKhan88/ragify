@@ -17,3 +17,4 @@ export { withRetry } from './utils/retry.js';
 export { toBatches } from './utils/batch.js';
 export { hashContent } from './utils/hash.js';
 export { ChromaVectorStore } from './vectorstores/chroma.js';
+export { QdrantVectorStore } from './vectorstores/qdrant.js';
