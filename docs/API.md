@@ -1,6 +1,6 @@
 # API Reference
 
-Full reference for every exported class, interface, and function in `@amjadkhan88/ragify`.
+Full reference for every exported class, interface, and function in `@amjadkhan-dev/ragify`.
 
 ## Table of Contents
 - [RagifyPipeline](#ragifypipeline)

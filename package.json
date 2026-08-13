@@ -1,5 +1,5 @@
 {
-  "name": "@amjadkhan88/ragify",
+  "name": "@amjadkhan-dev/ragify",
   "version": "0.1.0",
   "description": "Unified RAG Pipeline Builder for Node.js — eliminates boilerplate across chunking, embedding, retrieval, and vector storage.",
   "type": "module",

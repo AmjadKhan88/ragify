@@ -1,7 +1,7 @@
 # Ragify
 
 [![CI](https://github.com/AmjadKhan88/Ragify/actions/workflows/ci.yml/badge.svg)](https://github.com/AmjadKhan88/Ragify/actions/workflows/ci.yml)
-[![npm version](https://img.shields.io/npm/v/@amjadkhan88/ragify.svg)](https://www.npmjs.com/package/@amjadkhan88/ragify)
+[![npm version](https://img.shields.io/npm/v/@amjadkhan-dev/ragify.svg)](https://www.npmjs.com/package/@amjadkhan-dev/ragify)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node](https://img.shields.io/badge/node-%3E%3D20-brightgreen)](https://nodejs.org)
 
@@ -68,7 +68,7 @@ const pipeline = new RagifyPipeline({
 ## Installation
 
 ```bash
-npm install @amjadkhan88/ragify
+npm install @amjadkhan-dev/ragify
 ```
 
 Ragify's provider SDKs are **optional peer dependencies** — install only what you use:
@@ -96,7 +96,7 @@ import {
   FixedSizeChunker,
   InMemoryVectorStore,
   MockEmbedder,
-} from '@amjadkhan88/ragify';
+} from '@amjadkhan-dev/ragify';
 
 const pipeline = new RagifyPipeline({
   chunker: new FixedSizeChunker(),
@@ -122,7 +122,7 @@ import {
   InMemoryVectorStore,
   GeminiEmbedder,
   GroqLLM,
-} from '@amjadkhan88/ragify';
+} from '@amjadkhan-dev/ragify';
 
 const pipeline = new RagifyPipeline({
   chunker: new RecursiveChunker(),
@@ -151,7 +151,7 @@ import {
   HybridRetriever,
   FileCache,
   LLMReranker,
-} from '@amjadkhan88/ragify';
+} from '@amjadkhan-dev/ragify';
 
 const embedder = new GeminiEmbedder();
 const vectorStore = new QdrantVectorStore({ url: process.env.QDRANT_URL });
@@ -230,7 +230,7 @@ new QdrantVectorStore({ url: process.env.QDRANT_URL, apiKey: process.env.QDRANT_
 Combines dense (vector similarity) and sparse (BM25 keyword) search, fused via Reciprocal Rank Fusion — dense search catches semantic meaning, BM25 catches exact terms/rare keywords that embeddings often blur together.
 
 ```typescript
-import { HybridRetriever } from '@amjadkhan88/ragify';
+import { HybridRetriever } from '@amjadkhan-dev/ragify';
 
 const retriever = new HybridRetriever(vectorStore, embedder);
 
@@ -247,7 +247,7 @@ const pipeline = new RagifyPipeline({
 An LLM-based relevance judgment applied on top of retrieval to improve final precision — reuses your existing `GroqLLM`/`GeminiLLM` wrapper, no dedicated re-ranking API needed.
 
 ```typescript
-import { LLMReranker } from '@amjadkhan88/ragify';
+import { LLMReranker } from '@amjadkhan-dev/ragify';
 
 const pipeline = new RagifyPipeline({
   chunker: new RecursiveChunker(),
@@ -264,7 +264,7 @@ const pipeline = new RagifyPipeline({
 Avoids re-embedding unchanged content, keyed by content hash — a single-character edit only re-embeds the affected chunk, not the whole document.
 
 ```typescript
-import { FileCache } from '@amjadkhan88/ragify';
+import { FileCache } from '@amjadkhan-dev/ragify';
 
 const pipeline = new RagifyPipeline({
   chunker: new RecursiveChunker(),
@@ -325,7 +325,7 @@ See `.env.example` in the repo for a ready-to-copy template.
 Every component is just a TypeScript interface — implement it to plug in a provider Ragify doesn't ship out of the box:
 
 ```typescript
-import type { Embedder } from '@amjadkhan88/ragify';
+import type { Embedder } from '@amjadkhan-dev/ragify';
 
 class MyCustomEmbedder implements Embedder {
   readonly dimensions = 512;
