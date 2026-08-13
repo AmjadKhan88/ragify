@@ -18,3 +18,4 @@ export { toBatches } from './utils/batch.js';
 export { hashContent } from './utils/hash.js';
 export { ChromaVectorStore } from './vectorstores/chroma.js';
 export { QdrantVectorStore } from './vectorstores/qdrant.js';
+export { LLMReranker } from './rerankers/llm-reranker.js';

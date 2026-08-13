@@ -2,7 +2,7 @@ import type { RagifyConfig, RagifyDocument, VectorSearchResult, Chunk } from '..
 import { hashContent } from '../utils/hash.js';
 
 export class RagifyPipeline {
-  constructor(private config: RagifyConfig) {}
+  constructor(private config: RagifyConfig) { }
 
   async addDocuments(documents: RagifyDocument[]): Promise<void> {
     for (const doc of documents) {
@@ -57,9 +57,20 @@ export class RagifyPipeline {
   }
 
   async query(text: string, topK = 5): Promise<VectorSearchResult[]> {
-    if (this.config.retriever) {
-      return this.config.retriever.retrieve(text, topK);
+    const fetchK = this.config.reranker ? topK * 3 : topK;
+
+    const initialResults = this.config.retriever
+      ? await this.config.retriever.retrieve(text, fetchK)
+      : await this.searchVectorStore(text, fetchK);
+
+    if (this.config.reranker) {
+      return this.config.reranker.rerank(text, initialResults, topK);
     }
+
+    return initialResults;
+  }
+
+  private async searchVectorStore(text: string, topK: number): Promise<VectorSearchResult[]> {
     const [embedding] = await this.config.embedder.embed([text]);
     return this.config.vectorStore.query(embedding, topK);
   }
