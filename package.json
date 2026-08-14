@@ -1,6 +1,6 @@
 {
   "name": "@amjadkhan-dev/ragify",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Unified RAG Pipeline Builder for Node.js — eliminates boilerplate across chunking, embedding, retrieval, and vector storage.",
   "type": "module",
   "main": "./dist/index.cjs",
