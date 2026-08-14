@@ -18,7 +18,7 @@ npm run test:run
 3. If the SDK is new to the project, add it to `devDependencies` **and** `peerDependencies` (with `peerDependenciesMeta.optional: true`) in `package.json`.
 4. Write mocked unit tests in `tests/` — never call real external APIs in the test suite (CI has no API keys configured, by design).
 5. Export your new class from `src/index.ts`.
-6. Add a row to the relevant table in `README.md` and a full entry in `docs/API.md`.
+6. Add documentation to `README.md` following the existing pattern for that component type.
 
 ## Coding conventions
 
@@ -40,3 +40,9 @@ All four must pass — CI runs the same checks on Node 20 and 22.
 ## Commit messages
 
 Loosely follows [Conventional Commits](https://www.conventionalcommits.org/): `feat:`, `fix:`, `docs:`, `test:`, `refactor:`, `ci:`.
+
+## Pull requests
+
+- Branch off `main`, never commit directly to it (branch protection enforces this anyway).
+- Keep PRs focused — one adapter or one fix per PR is easier to review than a bundle of unrelated changes.
+- Link any related issue in the PR description.
